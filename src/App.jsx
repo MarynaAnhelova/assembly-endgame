@@ -1,4 +1,7 @@
 import React from "react"
+import { useState } from "react"
+import {languages} from "./lenguages";
+import { clsx } from "clsx"
 
 /**
  * Goal: Build out the main parts of our app
@@ -7,12 +10,87 @@ import React from "react"
  * and description. Startin' out easy 🙂🚶‍➡️
  */
 
-export default function Hangman() {
+
+export default function AssemblyEndgame() {
+    const [currentWord, setCurrentWord] = useState("react")
+    const [guessedLetters, setGuessedLetters] = useState([])
+
+    const alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+    function addGuessedLetter(letter) {
+        setGuessedLetters(prevLetters =>
+            prevLetters.includes(letter) ?
+                prevLetters :
+                [...prevLetters, letter]
+        )
+    }
+
+    const languageElements = languages.map(lang => {
+        const styles = {
+            backgroundColor: lang.backgroundColor,
+            color: lang.color
+        }
+        return (
+            <span
+                className="chip"
+                style={styles}
+                key={lang.name}
+            >
+                {lang.name}
+            </span>
+        )
+    })
+
+    const letterElements = currentWord.split("").map((letter, index) => (
+        <span key={index}>{letter.toUpperCase()}</span>
+    ))
+
+    const keyboardElements = alphabet.split("").map(letter => {
+        const isGuessed = guessedLetters.includes(letter)
+        const isCorrect = isGuessed && currentWord.includes(letter)
+        const isWrong = isGuessed && !currentWord.includes(letter)
+        const className = clsx({
+            correct: isCorrect,
+            wrong: isWrong
+        })
+
+        console.log(className)
+
+        return (
+            <button
+                className={className}
+                key={letter}
+                onClick={() => addGuessedLetter(letter)}
+            >
+                {letter.toUpperCase()}
+            </button>
+        )
+    })
+
     return (
         <main>
-            Game goes here
+            <header>
+                <h1>Assembly: Endgame</h1>
+                <p>Guess the word within 8 attempts to keep the
+                    programming world safe from Assembly!</p>
+            </header>
+            <section className="game-status">
+                <h2>You win!</h2>
+                <p>Well done! 🎉</p>
+            </section>
+            <section className="language-chips">
+                {languageElements}
+            </section>
+            <section className="word">
+                {letterElements}
+            </section>
+            <section className="keyboard">
+                {keyboardElements}
+            </section>
+            <button className="new-game">New Game</button>
         </main>
     )
 }
+
 
 
