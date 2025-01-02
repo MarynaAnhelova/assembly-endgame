@@ -2,13 +2,13 @@ import React from "react"
 import { useState } from "react"
 import {languages} from "./lenguages";
 import { clsx } from "clsx"
-import { getFarewellText } from "./utils"
+import { getFarewellText, getRandomWord } from "./utils"
 
 
 
 export default function AssemblyEndgame() {
     // State values
-    const [currentWord, setCurrentWord] = useState("react")
+    const [currentWord, setCurrentWord] = useState(getRandomWord())
     const [guessedLetters, setGuessedLetters] = useState([])
 
     // Derived values
@@ -31,6 +31,10 @@ export default function AssemblyEndgame() {
                 prevLetters :
                 [...prevLetters, letter]
         )
+    }
+    function startNewGame() {
+        setCurrentWord(getRandomWord())
+        setGuessedLetters([])
     }
 
     const languageElements = languages.map((lang, index) => {
@@ -162,7 +166,7 @@ export default function AssemblyEndgame() {
                 {keyboardElements}
             </section>
 
-            {isGameOver && <button className="new-game">New Game</button>}
+            {isGameOver && <button className="new-game" onClick={startNewGame}>New Game</button>}
         </main>
     )
 }
